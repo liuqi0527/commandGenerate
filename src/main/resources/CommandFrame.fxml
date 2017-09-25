@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="763.0" prefWidth="1282.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.egls.server.command.controller.CommandController">
+    <children>
+        <ScrollPane layoutX="49.0" layoutY="55.0">
+            <content>
+                <TableView fx:id="messageTable" editable="true" prefHeight="600.0" prefWidth="550.0">
+                    <columns>
+                        <TableColumn fx:id="messageIdColumn" prefWidth="88.0" text="Command"/>
+                        <TableColumn fx:id="messageNameColumn" prefWidth="167.0" text="ClassName"/>
+                        <TableColumn fx:id="messageDesColumn" prefWidth="248.0" text="Comment"/>
+                        <TableColumn fx:id="messageEditColumn" editable="false" prefWidth="46.0" sortable="false"
+                                     text="Edit"/>
+                    </columns>
+                </TableView>
+            </content>
+        </ScrollPane>
+        <ScrollPane layoutX="665.0" layoutY="55.0">
+            <content>
+                <TableView fx:id="detailTable" editable="true" prefHeight="600.0" prefWidth="550.0">
+                    <columns>
+                        <TableColumn fx:id="detailTypeColumn" prefWidth="73.0" text="Type"/>
+                        <TableColumn fx:id="detailNameColumn" prefWidth="130.0" text="Name"/>
+                        <TableColumn fx:id="detailDesColumn" prefWidth="243.0" text="Comment"/>
+                        <TableColumn fx:id="detailEditColumn" prefWidth="103.0" text="Edit"/>
+                    </columns>
+                </TableView>
+            </content>
+        </ScrollPane>
+        <Button layoutX="666.0" layoutY="33.0" mnemonicParsing="false" onAction="#showCreateFieldUI" text="+"/>
+        <Button layoutX="50.0" layoutY="33.0" mnemonicParsing="false" onAction="#showCreateMsgUI" text="+"/>
+        <MenuBar layoutX="1.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#createConfigFile" text="New"/>
+                        <MenuItem mnemonicParsing="false" onAction="#openConfigFile" text="Open"/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAs" text="Save As..."/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#showHelpUI" text="   ">
+                            <graphic>
+                                <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="10.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@icon/icon_question.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <GridPane layoutX="80.0" layoutY="662.0" prefHeight="86.0" prefWidth="440.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="68.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="285.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="135.0"
+                       text="GroupId：">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <Label alignment="TOP_RIGHT" prefHeight="19.0" prefWidth="135.0" text="artifactId："
+                       GridPane.rowIndex="1">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <Label alignment="TOP_RIGHT" prefHeight="14.0" prefWidth="135.0" text="version：" GridPane.rowIndex="2">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="groupField" GridPane.columnIndex="1"/>
+                <TextField fx:id="artifactField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <TextField fx:id="versionField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </children>
+        </GridPane>
+        <Button id="genBtn" layoutX="855.0" layoutY="714.0" mnemonicParsing="false" onAction="#installJar"
+                text="Install Jar"/>
+        <GridPane layoutX="722.0" layoutY="664.0" prefHeight="41.0" prefWidth="440.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="68.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="285.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label alignment="TOP_RIGHT" prefHeight="14.0" prefWidth="135.0" text="PackageName："
+                       GridPane.rowIndex="0">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="packageField" prefWidth="285.0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            </children>
+        </GridPane>
+        <Button id="genBtn" layoutX="970.0" layoutY="714.0" mnemonicParsing="false" onAction="#deployJar"
+                text="Deploy Jar"/>
+    </children>
+</AnchorPane>

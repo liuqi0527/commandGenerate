@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="623.0" prefWidth="493.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TextArea editable="false" layoutX="14.0" layoutY="14.0" prefHeight="598.0" prefWidth="463.0"
+                  style="-fx-background-color: transparent; -fx-border-color: transparent;" text="还没开始写呢">
+            <font>
+                <Font size="15.0"/>
+            </font>
+        </TextArea>
+    </children>
+</AnchorPane>

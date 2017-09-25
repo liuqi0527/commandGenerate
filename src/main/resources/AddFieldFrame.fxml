@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="212.0" prefWidth="329.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.egls.server.command.controller.AddFieldController">
+    <children>
+        <Pane prefHeight="212.0" prefWidth="362.0">
+            <children>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="59.0" layoutY="25.0" prefHeight="22.0"
+                       prefWidth="65.0" text="Type:" textAlignment="RIGHT" textOverrun="CLIP">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <ChoiceBox fx:id="typeBox" layoutX="134.0" layoutY="26.0" prefHeight="22.0" prefWidth="161.0"/>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="15.0" layoutY="75.0" prefHeight="22.0"
+                       prefWidth="109.0" text="FieldName:" textAlignment="RIGHT" textOverrun="CLIP">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="nameField" layoutX="134.0" layoutY="76.0"/>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="21.0" layoutY="127.0" prefHeight="22.0"
+                       prefWidth="103.0" text="Comment:" textAlignment="RIGHT" textOverrun="CLIP">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="desField" layoutX="134.0" layoutY="128.0"/>
+                <Button layoutX="155.0" layoutY="165.0" mnemonicParsing="false" onAction="#create" text="Add"/>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>

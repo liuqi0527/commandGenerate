@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="171.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.egls.server.command.controller.ConfirmController">
+    <children>
+        <Label fx:id="msgLabel" alignment="CENTER" layoutX="37.0" prefHeight="82.0" prefWidth="267.0" text="出现问题了，提示一下你"
+               wrapText="true">
+            <font>
+                <Font size="13.0"/>
+            </font>
+        </Label>
+        <Button layoutX="64.0" layoutY="92.0" mnemonicParsing="false" onAction="#confirm" prefHeight="34.0"
+                prefWidth="69.0" text="确定"/>
+        <Button layoutX="204.0" layoutY="92.0" mnemonicParsing="false" onAction="#cancel" prefHeight="34.0"
+                prefWidth="69.0" text="取消"/>
+    </children>
+</AnchorPane>
