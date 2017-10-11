@@ -4,15 +4,20 @@ import com.egls.server.command.CommandManager;
 import com.egls.server.command.MainApplication;
 import com.egls.server.command.model.CommandFieldEntity;
 import com.egls.server.command.model.CommandObjectEntity;
-import com.egls.server.command.model.CommandObjectFiledType;
+import com.egls.server.command.model.type.CollectionType;
+import com.egls.server.command.model.type.FiledType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.stream.Collectors;
 
 /**
  * @author LiuQi
@@ -21,13 +26,27 @@ import javafx.stage.Stage;
 public class AddFieldController {
 
     @FXML
+    private ChoiceBox<String> collectionBox;
+
+    @FXML
+    private Pane typePanel;
+
+    @FXML
     private ChoiceBox<String> typeBox;
+
+    @FXML
+    private Pane itemPanel;
+
+    @FXML
+    private ChoiceBox<String> itemBox;
 
     @FXML
     private TextField nameField;
 
     @FXML
     private TextField desField;
+
+    private boolean isPrimaryType = true;
 
     private Stage stage;
     private CommandController messageViewController;
@@ -57,8 +76,16 @@ public class AddFieldController {
     private void initialize() {
         //fxml文件完成载入时被自动调用. 所有的FXML属性都已被初始化.
 
-        typeBox.setItems(FXCollections.observableArrayList(CommandObjectFiledType.FIELD_TYPES.keySet()));
+        collectionBox.setItems(CollectionType.nameList);
+        collectionBox.getSelectionModel().select(0);
+
+        typeBox.setItems(FXCollections.observableArrayList(FiledType.FIELD_TYPES.keySet()));
         typeBox.getSelectionModel().select(0);
+
+        itemBox.setItems(FXCollections.observableArrayList(CommandManager.getInstance().itemList.stream().map(CommandObjectEntity::getName).collect(Collectors.toList())));
+        itemBox.getSelectionModel().select(0);
+
+        updateUI();
     }
 
     @FXML
@@ -70,16 +97,39 @@ public class AddFieldController {
             return;
         }
 
+
         String name = nameField.getText();
         if (!message.isFieldNameValid(null, name)) {
             return;
         }
 
-        CommandFieldEntity field = new CommandFieldEntity(typeBox.getValue(), name, desField.getText());
+        CollectionType collectionType = CollectionType.getType(collectionBox.getValue());
+        String type = isPrimaryType ? typeBox.getValue() : itemBox.getValue();
+        if (StringUtils.isBlank(type)) {
+            ConfirmController.show("请选择属性类型");
+            return;
+        }
+        if (collectionType != CollectionType.none && StringUtils.equals("bytes", type)) {
+            ConfirmController.show("该类型无法作为集合元素使用");
+            return;
+        }
+
+        CommandFieldEntity field = new CommandFieldEntity(collectionType, type, name, desField.getText());
         message.getFields().add(field);
         CommandManager.save();
 
         nameField.setText(null);
         desField.setText(null);
+    }
+
+    @FXML
+    private void switchType() {
+        isPrimaryType = !isPrimaryType;
+        updateUI();
+    }
+
+    private void updateUI() {
+        typePanel.setVisible(isPrimaryType);
+        itemPanel.setVisible(!isPrimaryType);
     }
 }

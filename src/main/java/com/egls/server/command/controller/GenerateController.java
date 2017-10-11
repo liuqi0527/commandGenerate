@@ -123,20 +123,34 @@ public class GenerateController {
     private void generalPomFile(String projectPath) throws Exception {
         Charset charset = Charset.forName("utf-8");
 
-        String pomFile = FileUtils.readFileToString(new File(getClass().getResource("/xml/pom.xml").getFile()), charset);
+        //pom.xml
+        BufferedReader pomReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/xml/pom.xml")));
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = pomReader.readLine()) != null) {
+            line = StringUtils.replaceFirst(line, "\\$\\{groupId\\}", CommandManager.getGroupId());
+            line = StringUtils.replaceFirst(line, "\\$\\{artifactId\\}", CommandManager.getArtifactId());
+            line = StringUtils.replaceFirst(line, "\\$\\{version\\}", CommandManager.getVersion());
+            stringBuilder.append(line);
+        }
+        FileUtils.writeStringToFile(new File(projectPath + File.separator + "pom.xml"), stringBuilder.toString(), charset);
 
-        pomFile = StringUtils.replaceFirst(pomFile, "\\$\\{groupId\\}", CommandManager.getGroupId());
-        pomFile = StringUtils.replaceFirst(pomFile, "\\$\\{artifactId\\}", CommandManager.getArtifactId());
-        pomFile = StringUtils.replaceFirst(pomFile, "\\$\\{version\\}", CommandManager.getVersion());
 
-        FileUtils.writeStringToFile(new File(projectPath + File.separator + "pom.xml"), pomFile, charset);
-
-        String assemblyFile = FileUtils.readFileToString(new File(getClass().getResource("/xml/assembly.xml").getFile()), charset);
-        FileUtils.writeStringToFile(new File(projectPath + File.separator + "assembly.xml"), assemblyFile, charset);
+        //assembly.xml
+        BufferedReader assemblyReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/xml/assembly.xml")));
+        StringBuilder assemblyFile = new StringBuilder();
+        while ((line = assemblyReader.readLine()) != null) {
+            assemblyFile.append(line);
+        }
+        FileUtils.writeStringToFile(new File(projectPath + File.separator + "assembly.xml"), assemblyFile.toString(), charset);
     }
 
     private void generalJavaFile(String commandPath) throws Exception {
         for (CommandObjectEntity commandObjectEntity : CommandManager.getInstance().commandList) {
+            String javaFilePath = commandPath + File.separator + commandObjectEntity.getName() + FileType.java.getExtension();
+            TxtUtil.write(commandObjectEntity.toJavaCode(), javaFilePath, false, false);
+        }
+        for (CommandObjectEntity commandObjectEntity : CommandManager.getInstance().itemList) {
             String javaFilePath = commandPath + File.separator + commandObjectEntity.getName() + FileType.java.getExtension();
             TxtUtil.write(commandObjectEntity.toJavaCode(), javaFilePath, false, false);
         }

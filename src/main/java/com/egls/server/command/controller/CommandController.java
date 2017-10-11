@@ -6,26 +6,30 @@ import com.egls.server.command.FileOperationType;
 import com.egls.server.command.MainApplication;
 import com.egls.server.command.model.CommandFieldEntity;
 import com.egls.server.command.model.CommandObjectEntity;
-import com.egls.server.command.model.CommandObjectFiledType;
+import com.egls.server.command.model.type.CommandType;
 import com.egls.server.command.view.component.ButtonListCell;
 import com.egls.server.command.view.component.TextEditCell;
 import com.egls.server.command.view.component.TypeEditCell;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author LiuQi
@@ -43,6 +47,15 @@ public class CommandController {
     private TableColumn<CommandObjectEntity, String> messageDesColumn;
     @FXML
     private TableColumn<CommandObjectEntity, Boolean> messageEditColumn;
+
+    @FXML
+    private TableView<CommandObjectEntity> itemTable;
+    @FXML
+    private TableColumn<CommandObjectEntity, String> itemNameColumn;
+    @FXML
+    private TableColumn<CommandObjectEntity, String> itemDesColumn;
+    @FXML
+    private TableColumn<CommandObjectEntity, Boolean> itemEditColumn;
 
     @FXML
     private TableView<CommandFieldEntity> detailTable;
@@ -64,6 +77,15 @@ public class CommandController {
     @FXML
     private TextField packageField;
 
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private Button createCommandBtn;
+
+    @FXML
+    private TabPane tabPanel;
+
     private CommandObjectEntity selectMsg;
 
     @FXML
@@ -79,6 +101,10 @@ public class CommandController {
         //初始化消息表
         messageTable.setItems(CommandManager.getInstance().commandList);
         messageTable.getSelectionModel().selectedItemProperty().addListener(this::messageSelect);
+        messageTable.sortPolicyProperty().set(table -> {
+            FXCollections.sort(table.getItems(), Comparator.comparingInt(CommandObjectEntity::getIntId).thenComparing(CommandObjectEntity::getName));
+            return true;
+        });
 
         messageIdColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         messageIdColumn.setCellFactory(column -> new TextEditCell<>((m, v) -> Constant.isCommandValid(v)));
@@ -89,12 +115,27 @@ public class CommandController {
         messageDesColumn.setCellValueFactory(cellData -> cellData.getValue().commentProperty());
         messageDesColumn.setCellFactory(column -> new TextEditCell<>());
 
-        messageEditColumn.setCellFactory(column -> new ButtonListCell<CommandObjectEntity>(Triple.of("", "/icon/icon_del1.png", this::messageDelete)));
+        messageEditColumn.setCellFactory(column -> new ButtonListCell<CommandObjectEntity>(Triple.of("", "/icon/icon_del1.png", index -> this.commandDelete(index, messageTable))));
 
+        //
+        itemTable.setItems(CommandManager.getInstance().itemList);
+        itemTable.getSelectionModel().selectedItemProperty().addListener(this::messageSelect);
+        itemTable.sortPolicyProperty().set(table -> {
+            FXCollections.sort(table.getItems(), Comparator.comparing(CommandObjectEntity::getName));
+            return true;
+        });
+
+        itemNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        itemNameColumn.setCellFactory(column -> new TextEditCell<>((m, v) -> StringUtils.equals(m.getName(), v) || Constant.isClassNameValid(v)));
+
+        itemDesColumn.setCellValueFactory(cellData -> cellData.getValue().commentProperty());
+        itemDesColumn.setCellFactory(column -> new TextEditCell<>());
+
+        itemEditColumn.setCellFactory(column -> new ButtonListCell<CommandObjectEntity>(Triple.of("", "/icon/icon_del1.png", index -> this.commandDelete(index, itemTable))));
 
         //初始化消息内容表
-        detailTypeColumn.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
-        detailTypeColumn.setCellFactory(column -> new TypeEditCell<>(CommandObjectFiledType.FIELD_TYPES.keySet()));
+        detailTypeColumn.setCellValueFactory(cellData -> cellData.getValue().fullTypeProperty());
+        detailTypeColumn.setCellFactory(column -> new TypeEditCell());
 
         detailNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         detailNameColumn.setCellFactory(column -> new TextEditCell<>((m, v) -> selectMsg != null && selectMsg.isFieldNameValid(m, v)));
@@ -107,6 +148,15 @@ public class CommandController {
                 Triple.of("", "/icon/arrow_triangle-down.png", this::fieldDown),
                 Triple.of("", "/icon/icon_del1.png", this::fieldDelete)
         )));
+
+
+        searchField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                searchCommand();
+            }
+        });
+
+        tabPanel.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> tabSelectChange());
     }
 
     private void initTextField(TextField textField, Supplier<String> textSupplier, Consumer<String> textConsumer) {
@@ -141,13 +191,44 @@ public class CommandController {
         }
     }
 
-    private void messageDelete(int rowIndex) {
-        CommandObjectEntity message = messageTable.getItems().get(rowIndex);
-        if (message != null) {
-            ConfirmController.show(String.format("确认删除消息：%s -- %s ？", message.getId(), message.getName()), () -> {
-                messageTable.getItems().remove(message);
-                CommandManager.removeCommand(message);
-            });
+    private void commandDelete(int rowIndex, TableView<CommandObjectEntity> tableView) {
+        CommandObjectEntity command = tableView.getItems().get(rowIndex);
+        if (command == null) {
+            return;
+        }
+
+        if (command.getType().isItem()) {
+            String commandName = getUseItemCommand(CommandManager.getInstance().commandList, command.getName());
+            if (StringUtils.isBlank(commandName)) {
+                getUseItemCommand(CommandManager.getInstance().itemList, command.getName());
+            }
+            if (StringUtils.isNotBlank(commandName)) {
+                ConfirmController.show(String.format("该消息被 %s 引用，无法删除", commandName));
+                return;
+            }
+        }
+
+        ConfirmController.show(String.format("确认删除消息：%s   %s ？", command.getId(), command.getName()), () -> {
+            tableView.getItems().remove(command);
+            CommandManager.removeCommand(command);
+        });
+    }
+
+    private String getUseItemCommand(Collection<CommandObjectEntity> list, String itemName) {
+        return list.stream().filter(command ->
+                command.getFields().stream().anyMatch(field -> StringUtils.equals(field.getType(), itemName)))
+                .map(CommandObjectEntity::getName)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void tabSelectChange() {
+        if (tabPanel.getSelectionModel().getSelectedIndex() == 0) {
+            messageSelect(null, null, messageTable.getSelectionModel().getSelectedItem());
+            createCommandBtn.setText("+ 指令");
+        } else {
+            messageSelect(null, null, itemTable.getSelectionModel().getSelectedItem());
+            createCommandBtn.setText("+ 结构体");
         }
     }
 
@@ -161,9 +242,38 @@ public class CommandController {
     }
 
     public void addMessageToTable(CommandObjectEntity message) {
-        messageTable.getItems().add(message);
-        messageTable.getSelectionModel().select(message);
+        TableView<CommandObjectEntity> table = message.getType().isCommand() ? messageTable : itemTable;
+        table.getItems().add(message);
+        table.sort();
+        table.getSelectionModel().select(message);
         showCreateFieldUI();
+    }
+
+    @FXML
+    private void searchCommand() {
+        if (tabPanel.getSelectionModel().getSelectedIndex() == 0) {
+            filterCommand(CommandManager.getInstance().commandList, searchField.getText(), messageTable);
+        } else {
+            filterCommand(CommandManager.getInstance().itemList, searchField.getText(), itemTable);
+        }
+    }
+
+    private void filterCommand(ObservableList<CommandObjectEntity> list, String text, TableView<CommandObjectEntity> tableView) {
+        ObservableList<CommandObjectEntity> itemList;
+        if (StringUtils.isBlank(text)) {
+            itemList = list;
+        } else {
+            itemList = FXCollections.observableArrayList(list.stream()
+                    .filter(command -> StringUtils.contains(command.getName(), text) || StringUtils.contains(command.getId(), text))
+                    .collect(Collectors.toList()));
+        }
+        tableView.setItems(itemList);
+        tableView.sort();
+        if (list.contains(selectMsg)) {
+            tableView.getSelectionModel().select(selectMsg);
+        } else {
+            tableView.getSelectionModel().selectFirst();
+        }
     }
 
     @FXML
@@ -192,8 +302,8 @@ public class CommandController {
     }
 
     @FXML
-    private void showCreateMsgUI() {
-        AddCommandController.show(this);
+    private void showCreateCommandUI() {
+        AddCommandController.show(this, tabPanel.getSelectionModel().getSelectedIndex() == 0 ? CommandType.command : CommandType.item);
     }
 
     @FXML

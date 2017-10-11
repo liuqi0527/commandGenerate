@@ -1,6 +1,7 @@
 package com.egls.server.command;
 
 import com.egls.server.command.model.CommandObjectEntity;
+import com.egls.server.command.model.type.CommandType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -28,16 +29,19 @@ public class CommandManager {
     private String groupId = "com.egls.server";
 
     @XmlElement
-    private String artifactId = "net-command";
+    private String artifactId = "net-command-test";
 
     @XmlElement
     private String version = "1.0-SNAPSHOT";
 
     @XmlElement
-    private String packageName = "msgPkg";
+    private String packageName = "com.egls.server.command";
 
     @XmlElement
     public ObservableList<CommandObjectEntity> commandList = FXCollections.observableArrayList();
+
+    @XmlElement
+    public ObservableList<CommandObjectEntity> itemList = FXCollections.observableArrayList();
 
     public static CommandManager getInstance() {
         return instance;
@@ -111,14 +115,19 @@ public class CommandManager {
     }
 
     public static void addCommand(CommandObjectEntity command) {
-        if (!instance.commandList.contains(command)) {
-            instance.commandList.add(command);
+        ObservableList<CommandObjectEntity> list = getList(command.getType());
+        if (!list.contains(command)) {
+            list.add(command);
         }
         save();
     }
 
     public static void removeCommand(CommandObjectEntity command) {
-        instance.commandList.remove(command);
+        getList(command.getType()).remove(command);
         save();
+    }
+
+    private static ObservableList<CommandObjectEntity> getList(CommandType type) {
+        return type.isCommand() ? instance.commandList : instance.itemList;
     }
 }

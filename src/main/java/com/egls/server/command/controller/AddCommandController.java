@@ -4,10 +4,12 @@ import com.egls.server.command.CommandManager;
 import com.egls.server.command.Constant;
 import com.egls.server.command.MainApplication;
 import com.egls.server.command.model.CommandObjectEntity;
+import com.egls.server.command.model.type.CommandType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,15 +29,19 @@ public class AddCommandController {
     @FXML
     private TextField desField;
 
+    @FXML
+    private HBox commandPanel;
+
     private CommandController messageViewController;
     private Stage stage;
+    private CommandType type;
 
     @FXML
     private void initialize() {
         //fxml文件完成载入时被自动调用. 所有的FXML属性都已被初始化.
     }
 
-    public static void show(CommandController messageViewController) {
+    public static void show(CommandController messageViewController, CommandType type) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(AddCommandController.class.getResource("/AddCommandFrame.fxml"));
@@ -48,7 +54,9 @@ public class AddCommandController {
 
             AddCommandController newMessageFrame = loader.getController();
             newMessageFrame.messageViewController = messageViewController;
+            newMessageFrame.type = type;
             newMessageFrame.stage = stage;
+            newMessageFrame.commandPanel.setVisible(type.isCommand());
 
             stage.show();
         } catch (Exception e) {
@@ -59,7 +67,7 @@ public class AddCommandController {
     @FXML
     private void create() {
         String id = idField.getText();
-        if (!Constant.isCommandValid(id)) {
+        if (type.isCommand() && !Constant.isCommandValid(id)) {
             return;
         }
 
@@ -68,7 +76,10 @@ public class AddCommandController {
             return;
         }
 
-        CommandObjectEntity message = new CommandObjectEntity(id, name, desField.getText());
+        CommandObjectEntity message = new CommandObjectEntity(type, name, desField.getText());
+        if (type.isCommand()) {
+            message.setId(id);
+        }
         messageViewController.addMessageToTable(message);
         CommandManager.addCommand(message);
 
