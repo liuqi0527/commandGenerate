@@ -7,10 +7,10 @@ package com.egls.server.command.model.type;
  * @version 1.0 Create on  2017/9/26
  */
 
-public class CompoundFieldType extends FiledType {
+public class CompoundFieldType extends FieldType {
 
     public CompoundFieldType(String type) {
-        super(type, type, null, null);
+        super(type, type, type, null, null);
     }
 
     public String generateRead(String fieldName) {

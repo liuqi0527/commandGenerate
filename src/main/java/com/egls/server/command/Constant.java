@@ -1,7 +1,7 @@
 package com.egls.server.command;
 
 import com.egls.server.command.controller.ConfirmController;
-import com.egls.server.command.model.type.FiledType;
+import com.egls.server.command.model.type.FieldType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -79,7 +79,7 @@ public class Constant {
             ConfirmController.show("ClassName重复");
             return false;
         }
-        if (FiledType.get(name) != null) {
+        if (FieldType.get(name) != null) {
             ConfirmController.show("ClassName与基础类型重复");
             return false;
         }

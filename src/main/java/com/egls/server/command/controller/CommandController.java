@@ -215,8 +215,10 @@ public class CommandController {
     }
 
     private String getUseItemCommand(Collection<CommandObjectEntity> list, String itemName) {
-        return list.stream().filter(command ->
-                command.getFields().stream().anyMatch(field -> StringUtils.equals(field.getType(), itemName)))
+        return list.stream()
+                .filter(command -> command.getFields().stream()
+                        .anyMatch(field -> field.getFieldTypes().stream()
+                                .anyMatch(type -> StringUtils.equals(itemName, type.getName()))))
                 .map(CommandObjectEntity::getName)
                 .findFirst()
                 .orElse(null);

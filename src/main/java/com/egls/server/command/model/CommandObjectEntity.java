@@ -5,7 +5,6 @@ import com.egls.server.command.Constant;
 import com.egls.server.command.controller.ConfirmController;
 import com.egls.server.command.model.type.CollectionType;
 import com.egls.server.command.model.type.CommandType;
-import com.egls.server.command.model.type.FiledType;
 import com.egls.server.net.tcp.spi.NetCommandObject;
 import com.egls.server.net.tcp.spi.NetDataPacket;
 import com.egls.server.utils.date.DateTimeFormatterType;
@@ -205,14 +204,12 @@ public class CommandObjectEntity {
 
     private String generateRead(CommandFieldEntity fieldEntity) {
         CollectionType collectionType = fieldEntity.getCollectionType();
-        FiledType fieldType = fieldEntity.getFieldType();
-        return collectionType.read(fields.indexOf(fieldEntity), fieldType, fieldEntity.getName());
+        return collectionType.read(fields.indexOf(fieldEntity), fieldEntity);
     }
 
     private String generateWrite(CommandFieldEntity fieldEntity) {
         CollectionType collectionType = fieldEntity.getCollectionType();
-        FiledType fieldType = fieldEntity.getFieldType();
-        return collectionType.write(fields.indexOf(fieldEntity), fieldType, fieldEntity.getName());
+        return collectionType.write(fields.indexOf(fieldEntity), fieldEntity);
     }
 
     private String generateCommand() {

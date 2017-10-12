@@ -2,7 +2,7 @@ package com.egls.server.command.model;
 
 import com.egls.server.command.model.type.CollectionType;
 import com.egls.server.command.model.type.CompoundFieldType;
-import com.egls.server.command.model.type.FiledType;
+import com.egls.server.command.model.type.FieldType;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +11,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author LiuQi
@@ -24,32 +26,35 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlAccessorType(XmlAccessType.NONE)
 public class CommandFieldEntity {
+    private static final String SEPARATOR = ",";
+
 
     //集合类型
     private CollectionType collectionType = CollectionType.none;
-    //元素类型
-    private String type;
 
-    private FiledType fieldType;
-
-    //类型全名，普通类型：String， Item， 集合类型：List<Integer>
+    //类型全名，普通类型：String， Item， 集合类型：List<Integer>, Map<Integer, Item>
     private StringProperty fullType = new SimpleStringProperty();
 
     private StringProperty name = new SimpleStringProperty();
     private StringProperty comment = new SimpleStringProperty();
 
+
+    //元素类型，基础类型或者符合类型的名称
+    private List<FieldType> fieldTypes = new ArrayList<>();
+    //存储用
+    private String type;
+
     public CommandFieldEntity() {
     }
 
-    public CommandFieldEntity(CollectionType collectionType, String type, String name, String comment) {
-        setType(type);
+    public CommandFieldEntity(CollectionType collectionType, String name, String comment) {
         setCollectionType(collectionType);
         setName(name);
         setComment(comment);
     }
 
     public String getFullTypeName() {
-        return StringUtils.isBlank(type) ? "" : collectionType.generateTypeName(getFieldType());
+        return fieldTypes.isEmpty() ? "" : collectionType.generateTypeName(this);
     }
 
     @XmlElement
@@ -62,25 +67,34 @@ public class CommandFieldEntity {
         this.setFullType(getFullTypeName());
     }
 
-    public FiledType getFieldType() {
-        return this.fieldType;
+    public FieldType getSingleFieldType() {
+        return this.fieldTypes.stream().findFirst().orElse(null);
     }
 
-    @XmlElement
-    public String getType() {
-        return type;
-    }
 
-    public void setType(String type) {
-        this.type = type;
-        this.fieldType = FiledType.get(type);
-        if (this.fieldType == null) {
-            this.fieldType = new CompoundFieldType(type);
+    public void addFieldType(String typeName, boolean clear) {
+        FieldType type = FieldType.get(typeName);
+        type = type != null ? type : new CompoundFieldType(typeName);
+        if (clear) {
+            fieldTypes.clear();
         }
+        fieldTypes.add(type);
 
-        this.setFullType(getFullTypeName());
+        StringBuilder sb = new StringBuilder();
+        for (FieldType fieldType : fieldTypes) {
+            sb.append(fieldType.getName()).append(SEPARATOR);
+        }
+        this.type = sb.toString();
+        resetFullName();
     }
 
+    public List<FieldType> getFieldTypes() {
+        return fieldTypes;
+    }
+
+    public void resetFullName() {
+        setFullType(getFullTypeName());
+    }
 
     public String getFullType() {
         return fullType.get();
@@ -92,6 +106,22 @@ public class CommandFieldEntity {
 
     public void setFullType(String fullType) {
         this.fullType.set(fullType);
+    }
+
+    @XmlElement
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+
+        fieldTypes.clear();
+        for (String typeStr : StringUtils.split(type, SEPARATOR)) {
+            if (StringUtils.isNotBlank(typeStr)) {
+                addFieldType(typeStr, false);
+            }
+        }
     }
 
     @XmlElement
