@@ -1,18 +1,20 @@
 package com.egls.server.command.model;
 
-import com.egls.server.command.model.type.CollectionType;
-import com.egls.server.command.model.type.CompoundFieldType;
-import com.egls.server.command.model.type.FieldType;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import org.apache.commons.lang3.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.egls.server.command.model.type.CollectionType;
+import com.egls.server.command.model.type.CompoundFieldType;
+import com.egls.server.command.model.type.FieldType;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author LiuQi
@@ -96,6 +98,7 @@ public class CommandFieldEntity {
         setFullType(getFullTypeName());
     }
 
+    //存储用
     public String getFullType() {
         return fullType.get();
     }

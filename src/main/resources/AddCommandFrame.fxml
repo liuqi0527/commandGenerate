@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="212.0" prefWidth="329.0" xmlns="http://javafx.com/javafx/8.0.112"
+<AnchorPane prefHeight="188.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8.0.112"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.egls.server.command.controller.AddCommandController">
     <children>
-        <VBox layoutX="21.0" layoutY="24.0" prefHeight="183.0" prefWidth="287.0">
+
+        <Pane fx:id="commandPanel" layoutX="21.0" layoutY="14.0" prefHeight="46.0" prefWidth="319.0">
             <children>
-                <HBox fx:id="commandPanel" prefHeight="60.0" prefWidth="287.0">
-                    <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="22.0" prefWidth="106.0"
-                               text="Command:  " textAlignment="RIGHT" textOverrun="CLIP">
-                            <font>
-                                <Font size="15.0"/>
-                            </font>
-                        </Label>
-                        <TextField fx:id="idField"/>
-                    </children>
-                </HBox>
-                <HBox prefHeight="60.0" prefWidth="287.0">
-                    <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="22.0" prefWidth="106.0"
-                               text="ClassName:  " textAlignment="RIGHT" textOverrun="CLIP">
-                            <font>
-                                <Font size="15.0"/>
-                            </font>
-                        </Label>
-                        <TextField fx:id="nameField"/>
-                    </children>
-                </HBox>
-                <HBox prefHeight="60.0" prefWidth="287.0">
-                    <children>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="22.0" prefWidth="106.0"
-                               text="Comment:  " textAlignment="RIGHT" textOverrun="CLIP">
-                            <font>
-                                <Font size="15.0"/>
-                            </font>
-                        </Label>
-                        <TextField fx:id="desField"/>
-                    </children>
-                </HBox>
-                <Pane prefHeight="79.0" prefWidth="287.0">
-                    <children>
-                        <Button fx:id="create" layoutX="119.0" layoutY="14.0" mnemonicParsing="false" onAction="#create"
-                                text="Create"/>
-                    </children>
-                </Pane>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-27.0" layoutY="13.0" prefHeight="22.0"
+                       prefWidth="106.0" text="Command:  " textAlignment="RIGHT" textOverrun="CLIP">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="idField" layoutX="79.0" layoutY="13.0"/>
+                <CheckBox fx:id="uiCommandCheckBox" layoutX="253.0" layoutY="15.0" mnemonicParsing="false" text="UI指令">
+                </CheckBox>
             </children>
-        </VBox>
+        </Pane>
+
+        <Pane layoutX="21.0" layoutY="55.0" prefHeight="53.0" prefWidth="319.0">
+            <children>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-27.0" layoutY="11.0" prefHeight="22.0"
+                       prefWidth="106.0" text="ClassName:  " textAlignment="RIGHT" textOverrun="CLIP">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="nameField" layoutX="79.0" layoutY="11.0"/>
+            </children>
+        </Pane>
+
+        <Pane layoutX="18.0" layoutY="100.0" prefHeight="34.0" prefWidth="319.0">
+            <children>
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-24.0" layoutY="3.0" prefHeight="22.0"
+                       prefWidth="106.0" text="Comment:  " textAlignment="RIGHT" textOverrun="CLIP">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="desField" layoutX="82.0" layoutY="3.0" prefHeight="22.0" prefWidth="161.0"/>
+            </children>
+        </Pane>
+
+        <Button fx:id="create" layoutX="145.0" layoutY="144.0" mnemonicParsing="false" onAction="#create"
+                text="Create"/>
     </children>
 </AnchorPane>

@@ -77,8 +77,9 @@
                         </Label>
                         <ChoiceBox fx:id="typeBox" layoutX="113.0" layoutY="17.0" prefHeight="22.0" prefWidth="161.0"/>
                         <ChoiceBox fx:id="itemBox" layoutX="113.0" layoutY="17.0" prefHeight="22.0" prefWidth="161.0"/>
-                        <Button layoutX="268.0" layoutY="13.0" mnemonicParsing="false" onAction="#switchType"
-                                prefHeight="22.0" prefWidth="19.0" style="-fx-background-color: transparent;">
+                        <Button fx:id="switchBtn" layoutX="268.0" layoutY="13.0" mnemonicParsing="false"
+                                onAction="#switchType" prefHeight="22.0" prefWidth="19.0"
+                                style="-fx-background-color: transparent;">
                             <graphic>
                                 <ImageView fitHeight="21.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                     <image>

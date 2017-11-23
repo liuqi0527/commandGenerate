@@ -8,6 +8,7 @@ import com.egls.server.command.model.CommandFieldEntity;
 import com.egls.server.command.model.CommandObjectEntity;
 import com.egls.server.command.model.type.CommandType;
 import com.egls.server.command.view.component.ButtonListCell;
+import com.egls.server.command.view.component.CheckBoxCell;
 import com.egls.server.command.view.component.TextEditCell;
 import com.egls.server.command.view.component.TypeEditCell;
 import javafx.beans.value.ObservableValue;
@@ -41,6 +42,8 @@ public class CommandController {
     private TableView<CommandObjectEntity> messageTable;
     @FXML
     private TableColumn<CommandObjectEntity, String> messageIdColumn;
+    @FXML
+    private TableColumn<CommandObjectEntity, Boolean> uiTypeColumn;
     @FXML
     private TableColumn<CommandObjectEntity, String> messageNameColumn;
     @FXML
@@ -108,6 +111,8 @@ public class CommandController {
 
         messageIdColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         messageIdColumn.setCellFactory(column -> new TextEditCell<>((m, v) -> Constant.isCommandValid(v)));
+
+        uiTypeColumn.setCellFactory(column -> new CheckBoxCell());
 
         messageNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         messageNameColumn.setCellFactory(column -> new TextEditCell<>((m, v) -> StringUtils.equals(m.getName(), v) || Constant.isClassNameValid(v)));
@@ -266,7 +271,7 @@ public class CommandController {
             itemList = list;
         } else {
             itemList = FXCollections.observableArrayList(list.stream()
-                    .filter(command -> StringUtils.contains(command.getName(), text) || StringUtils.contains(command.getId(), text))
+                    .filter(command -> command.containsKeyword(text))
                     .collect(Collectors.toList()));
         }
         tableView.setItems(itemList);

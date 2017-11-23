@@ -197,21 +197,6 @@ public class TypeEditCell extends TableCell<CommandFieldEntity, String> {
         hBox.getChildren().add(isPrimaryType ? typeBox : itemBox);
         hBox.getChildren().add(switchBtn);
         hBox.getChildren().add(confirmBtn);
-
-        CommandFieldEntity fieldEntity = getFieldEntity();
-
-//
-//        hBox.getChildren().remove(removeChild);
-//        if (!hBox.getChildren().contains(addChild)) {
-//            hBox.getChildren().add(1, isPrimaryType ? typeBox : itemBox);
-//            if (addChild.getItems().contains(fieldEntity.getType())) {
-//                addChild.getSelectionModel().select(fieldEntity.getType());
-//            } else {
-//                addChild.getSelectionModel().clearSelection();
-//            }
-//        }
-////        typeBox.setVisible(isPrimaryType);
-////        itemBox.setVisible(!isPrimaryType);
     }
 
     private CommandFieldEntity getFieldEntity() {

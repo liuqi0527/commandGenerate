@@ -5,13 +5,16 @@ import com.egls.server.command.Constant;
 import com.egls.server.command.MainApplication;
 import com.egls.server.command.model.CommandObjectEntity;
 import com.egls.server.command.model.type.CommandType;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -30,7 +33,10 @@ public class AddCommandController {
     private TextField desField;
 
     @FXML
-    private HBox commandPanel;
+    private Pane commandPanel;
+
+    @FXML
+    private CheckBox uiCommandCheckBox;
 
     private CommandController messageViewController;
     private Stage stage;
@@ -58,6 +64,12 @@ public class AddCommandController {
             newMessageFrame.stage = stage;
             newMessageFrame.commandPanel.setVisible(type.isCommand());
 
+            if (messageViewController.getSelectMsg() != null) {
+                int defaultCommandId = messageViewController.getSelectMsg().getIntId() + 1;
+                String defaultCommand = "0x" + StringUtils.upperCase(StringUtils.leftPad(Integer.toHexString(defaultCommandId), 4, '0'));
+                newMessageFrame.idField.setText(defaultCommand);
+                newMessageFrame.nameField.requestFocus();
+            }
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,6 +91,7 @@ public class AddCommandController {
         CommandObjectEntity message = new CommandObjectEntity(type, name, desField.getText());
         if (type.isCommand()) {
             message.setId(id);
+            message.setUiCommand(uiCommandCheckBox.isSelected());
         }
         messageViewController.addMessageToTable(message);
         CommandManager.addCommand(message);

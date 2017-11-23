@@ -1,127 +1,121 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
     <groupId>com.egls.server</groupId>
-    <artifactId>command-package-test</artifactId>
+    <artifactId>maintenance-starter-protocol</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packageName>com.egls.server.maintenance.proto</packageName>
+    <packageName>com.egls.server.maintenance.starter.protocol</packageName>
     <commandList>
+        <type>command</type>
         <id>0x0F01</id>
         <name>GroovyExecuteRequest</name>
         <comment>执行Groovy的请求</comment>
         <fields>
-            <type>String</type>
-            <name>requestId</name>
-            <comment>请求的标识</comment>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>username</name>
+            <comment>用户名</comment>
         </fields>
         <fields>
-            <type>String</type>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>pageId</name>
+            <comment>页面的标识</comment>
+        </fields>
+        <fields>
+            <collectionType>none</collectionType>
+            <type>String,</type>
             <name>code</name>
             <comment>要执行的代码</comment>
         </fields>
     </commandList>
     <commandList>
+        <type>command</type>
         <id>0x0F02</id>
         <name>GroovyExecuteResponse</name>
         <comment>执行Groovy的返回</comment>
         <fields>
-            <type>String</type>
-            <name>responseId</name>
-            <comment>返回的标识</comment>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>username</name>
+            <comment>用户名</comment>
         </fields>
         <fields>
-            <type>String</type>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>pageId</name>
+            <comment>页面的标识</comment>
+        </fields>
+        <fields>
+            <collectionType>none</collectionType>
+            <type>String,</type>
             <name>json</name>
             <comment>结果的json字符串</comment>
         </fields>
     </commandList>
     <commandList>
+        <type>command</type>
         <id>0x0F03</id>
-        <name>MemoryStatusRequestss</name>
-        <comment>内存信息的请求</comment>
+        <name>DslExecuteRequest</name>
+        <comment>执行领域特定语言命令的请求</comment>
+        <fields>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>username</name>
+            <comment>用户名</comment>
+        </fields>
+        <fields>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>pageId</name>
+            <comment>页面的标识</comment>
+        </fields>
+        <fields>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>dsl</name>
+            <comment>命令</comment>
+        </fields>
     </commandList>
     <commandList>
+        <type>command</type>
         <id>0x0F04</id>
-        <name>MemoryStatusRsespon</name>
-        <comment>dddf</comment>
+        <name>DslExecuteResponse</name>
+        <comment>执行领域特定语言命令的返回</comment>
         <fields>
-            <type>String</type>
-            <name>json</name>
-            <comment>结果的json字符串</comment>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>username</name>
+            <comment>请求的id</comment>
+        </fields>
+        <fields>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>pageId</name>
+            <comment>页面的标识</comment>
+        </fields>
+        <fields>
+            <collectionType>none</collectionType>
+            <type>String,</type>
+            <name>result</name>
+            <comment>返回的结果，换行用\n</comment>
         </fields>
     </commandList>
     <commandList>
+        <type>command</type>
         <id>0x0F05</id>
-        <name>ThreadStatusRequ</name>
-        <comment>线程信息的请求</comment>
+        <name>StatusDataRequest</name>
+        <comment>请求状态数据</comment>
     </commandList>
     <commandList>
+        <type>command</type>
         <id>0x0F06</id>
-        <name>ThreadStatusRespo</name>
-        <comment>线程信息的返回</comment>
+        <name>StatusDataResponse</name>
+        <comment>状态数据的返回</comment>
         <fields>
-            <type>String</type>
+            <collectionType>none</collectionType>
+            <type>String,</type>
             <name>json</name>
-            <comment>结果的json字符串</comment>
-        </fields>
-    </commandList>
-    <commandList>
-        <id>0x0F07</id>
-        <name>NetStatusRequestddd</name>
-        <comment>网络信息的请求</comment>
-    </commandList>
-    <commandList>
-        <id>0x0F08</id>
-        <name>NetStatusRequ</name>
-        <comment>网络信息的返回</comment>
-        <fields>
-            <type>String</type>
-            <name>json</name>
-            <comment>结果的json字符串</comment>
-        </fields>
-    </commandList>
-    <commandList>
-        <id>0x0F09</id>
-        <name>DatabaseStatusRequest</name>
-        <comment>数据库状态的请求</comment>
-    </commandList>
-    <commandList>
-        <id>0x0F0A</id>
-        <name>DatabaseStatusRequestss</name>
-        <comment>数据库状态的返回</comment>
-        <fields>
-            <type>String</type>
-            <name>json</name>
-            <comment>结果的json字符串</comment>
-        </fields>
-    </commandList>
-    <commandList>
-        <id>0x0F0B</id>
-        <name>HttpStatusRequest</name>
-        <comment>Http状态的请求</comment>
-    </commandList>
-    <commandList>
-        <id>0x0F0C</id>
-        <name>HttpStatusResponse</name>
-        <comment>Http状态的返回</comment>
-        <fields>
-            <type>String</type>
-            <name>json</name>
-            <comment>结果的json字符串</comment>
-        </fields>
-    </commandList>
-    <commandList>
-        <id>0x0F0D</id>
-        <name>ApplicationStatusRequest</name>
-        <comment>应用的状态的请求</comment>
-    </commandList>
-    <commandList>
-        <id>0x0F0E</id>
-        <name>ApplicationStatusResponse</name>
-        <comment>应用的状态的返回</comment>
-        <fields>
-            <type>String</type>
-            <name>json</name>
-            <comment>结果的json字符串</comment>
+            <comment>json封装的数据体</comment>
         </fields>
     </commandList>
 </root>

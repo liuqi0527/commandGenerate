@@ -89,6 +89,7 @@ public class MainApplication extends Application {
             Parent root = FXMLLoader.load(MainApplication.class.getResource("/CommandFrame.fxml"));
             primaryStage.setTitle("Command Edit");
             primaryStage.setScene(new Scene(root, 1435, 812));
+            primaryStage.setMaximized(true);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

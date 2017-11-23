@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -48,6 +49,10 @@ public class AddFieldController {
 
 
     @FXML
+    private Button switchBtn;
+
+
+    @FXML
     private TextField nameField;
     @FXML
     private TextField desField;
@@ -73,6 +78,7 @@ public class AddFieldController {
             AddFieldController controller = loader.getController();
             controller.stage = stage;
             controller.messageViewController = messageViewController;
+            controller.updateByCommand();
 
             stage.show();
         } catch (Exception e) {
@@ -96,6 +102,13 @@ public class AddFieldController {
 
         updateTypeBox();
         updateValueBox();
+    }
+
+    private void updateByCommand() {
+        CommandObjectEntity message = messageViewController.getSelectMsg();
+        boolean isUICommand = message != null && message.isUiCommand();
+        collectionBox.setDisable(isUICommand);
+        switchBtn.setDisable(isUICommand);
     }
 
     private void initBox(ChoiceBox<String> box, int type) {
@@ -122,6 +135,12 @@ public class AddFieldController {
             return;
         }
 
+        if (message.isUiCommand() && (CollectionType.getType(collectionBox.getValue()) != CollectionType.none ||
+                !isPrimaryType || StringUtils.equals(typeBox.getValue(), "bytes"))) {
+            ConfirmController.show("UI类型消息，只能使用基础类型");
+            return;
+        }
+
 
         if (!message.isFieldNameValid(null, nameField.getText())) {
             return;
@@ -134,7 +153,7 @@ public class AddFieldController {
     }
 
     private boolean addMapField() {
-        CollectionType collectionType = CollectionType.getType(collectionBox.getValue());
+        CollectionType collectionType = getCollectionType();
         String keyType = keyBox.getValue();
         String valueType = isPrimaryValueType ? valueTypeBox.getValue() : valueItemBox.getValue();
         if (StringUtils.isBlank(valueType)) {
@@ -151,7 +170,7 @@ public class AddFieldController {
     }
 
     private boolean addSimpleField() {
-        CollectionType collectionType = CollectionType.getType(collectionBox.getValue());
+        CollectionType collectionType = getCollectionType();
         String type = isPrimaryType ? typeBox.getValue() : itemBox.getValue();
         if (StringUtils.isBlank(type)) {
             ConfirmController.show("请选择属性类型");
@@ -167,6 +186,10 @@ public class AddFieldController {
         messageViewController.getSelectMsg().getFields().add(field);
         CommandManager.save();
         return true;
+    }
+
+    private CollectionType getCollectionType() {
+        return CollectionType.getType(collectionBox.getValue());
     }
 
     //

@@ -21,6 +21,7 @@ import org.apache.commons.lang3.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
@@ -83,41 +84,71 @@ public class GenerateController {
                 String projectPath = getPath(System.getProperty("user.dir"), CommandManager.getArtifactId());
                 String commandPath = getPath(projectPath, "src", "main", "java", StringUtils.replace(CommandManager.getPackageName(), ".", File.separator));
 
-                printMessage("生成项目目录");
+                printMessage("生成项目目录\n");
                 File projectDir = new File(projectPath);
                 FileUtil.createDirOnNoExists(projectDir);
                 FileUtils.cleanDirectory(projectDir);
 
-                printMessage("生成Maven配置文件");
+                printMessage("生成Maven配置文件\n");
                 generalPomFile(projectPath);
 
-                printMessage("生成Java源文件文件");
+                printMessage("生成Java源文件文件\n");
                 generalJavaFile(commandPath);
 
-                printMessage("开始编译打包");
+                printMessage("开始编译打包\n");
                 Process process;
                 if (SystemUtils.IS_OS_WINDOWS) {
-                    process = Runtime.getRuntime().exec("cmd /k mvn clean " + buildCmd, null, projectDir);
+                    process = Runtime.getRuntime().exec("mvn.cmd clean " + buildCmd + " && exit", null, projectDir);
                 } else {
                     process = Runtime.getRuntime().exec("mvn clean " + buildCmd, null, projectDir);
                 }
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while (StringUtils.isNotBlank((line = reader.readLine()))) {
-                    printMessage(line);
+                try {
+                    Thread.sleep(2000L);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                printMessage("执行完成");
+
+                while (true) {
+                    if (!printStream(process.getInputStream()) && !printStream(process.getErrorStream())) {
+                        try {
+                            // Nothing to do, sleep a while...
+                            Thread.sleep(100);
+                            // Throw IllegalThreadStateException, if the subprocess represented by this Process object has not yet terminated.
+                            printMessage("Process finished with exit code " + process.exitValue() + "\n");
+                            break;
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        } catch (IllegalThreadStateException ex) {
+                            // Process still alive
+                        }
+                    }
+                }
+
+                process.destroy();
+                printMessage("执行完成\n");
             } catch (Exception e) {
                 e.printStackTrace();
                 for (StackTraceElement stackTraceElement : e.getStackTrace()) {
                     printMessage(stackTraceElement.toString());
                 }
-                printMessage("执行失败");
+                printMessage("执行失败\n");
             } finally {
-                closeBtn.setVisible(true);
+                Platform.runLater(() -> closeBtn.setVisible(true));
             }
         }).start();
+    }
+
+    private boolean printStream(InputStream stream) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        while (stream.available() > 0) {
+            sb.append((char) stream.read());
+        }
+
+        if (sb.length() > 0) {
+            printMessage(sb.toString());
+        }
+        return sb.length() > 0;
     }
 
     private void generalPomFile(String projectPath) throws Exception {
@@ -173,7 +204,6 @@ public class GenerateController {
 
             Platform.runLater(() -> {
                 consoleField.appendText(message);
-                consoleField.appendText("\n");
                 consoleField.setScrollLeft(0D);
                 consoleField.setScrollTop(Double.MAX_VALUE);
             });

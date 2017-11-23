@@ -34,13 +34,13 @@ public class Constant {
             return false;
         }
 
-        int tempCommand = Integer.decode(command);
-        if (tempCommand < Short.MIN_VALUE || Short.MAX_VALUE < tempCommand) {
+        int commandNumber = Integer.decode(command);
+        if (commandNumber < Short.MIN_VALUE || Short.MAX_VALUE < commandNumber) {
             ConfirmController.show("指令号范围越界");
             return false;
         }
 
-        if (CommandManager.getInstance().commandList.stream().anyMatch(message -> StringUtils.equals(command, message.getId()))) {
+        if (CommandManager.getInstance().commandList.stream().anyMatch(message -> commandNumber == message.getIntId())) {
             ConfirmController.show("指令号重复");
             return false;
         }
