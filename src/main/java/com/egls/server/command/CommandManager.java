@@ -1,19 +1,25 @@
 package com.egls.server.command;
 
-import com.egls.server.command.model.CommandObjectEntity;
-import com.egls.server.command.model.type.CommandType;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.io.File;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
+
+import com.egls.server.command.model.CommandObjectEntity;
+import com.egls.server.command.model.type.CommandType;
+import com.egls.server.utils.Md5Util;
+import com.egls.server.utils.resource.file.ResourceKindMonitor;
+import com.egls.server.utils.resource.file.ResourceWatcher;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author LiuQi
@@ -21,7 +27,7 @@ import java.io.File;
  */
 @XmlRootElement(name = "root")
 @XmlAccessorType(XmlAccessType.NONE)
-public class CommandManager {
+public class CommandManager implements ResourceKindMonitor {
 
     private static CommandManager instance = new CommandManager();
 
@@ -43,6 +49,9 @@ public class CommandManager {
     @XmlElement
     public ObservableList<CommandObjectEntity> itemList = FXCollections.observableArrayList();
 
+    private static boolean isSave;
+    private static String md5Record;
+
     public static CommandManager getInstance() {
         return instance;
     }
@@ -59,22 +68,49 @@ public class CommandManager {
             JAXBContext jaxbContext = JAXBContext.newInstance(CommandManager.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             CommandManager.instance = (CommandManager) jaxbUnmarshaller.unmarshal(file);
-        } catch (JAXBException e) {
+            ResourceWatcher.registerFile(file, instance);
+            recordMd5(file);
+        } catch (Exception e) {
             System.err.println("read config fail");
         }
         return true;
     }
 
+    @Override
+    public void onModify(File file) throws Exception {
+        if (!isSave && !StringUtils.equals(getMd5(file), md5Record) && StringUtils.equals(file.getAbsolutePath(), LocalProperties.getConfigPath())) {
+            recordMd5(file);
+            Platform.runLater(() -> MainApplication.loadAndShow(file));
+        }
+    }
+
     public static void save() {
         try {
+            isSave = true;
             File file = new File(LocalProperties.getConfigPath());
             JAXBContext jaxbContext = JAXBContext.newInstance(CommandManager.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(instance, file);
-        } catch (JAXBException e) {
+            recordMd5(new File(LocalProperties.getConfigPath()));
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            isSave = false;
+        }
+    }
+
+    private static void recordMd5(File file) {
+        md5Record = getMd5(file);
+    }
+
+    private static String getMd5(File file) {
+        try {
+            return Md5Util.MD5(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "defaultMD5";
         }
     }
 

@@ -1,5 +1,12 @@
 package com.egls.server.command.controller;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.egls.server.command.CommandManager;
 import com.egls.server.command.Constant;
 import com.egls.server.command.FileOperationType;
@@ -11,6 +18,7 @@ import com.egls.server.command.view.component.ButtonListCell;
 import com.egls.server.command.view.component.CheckBoxCell;
 import com.egls.server.command.view.component.TextEditCell;
 import com.egls.server.command.view.component.TypeEditCell;
+
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,13 +32,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * @author LiuQi
@@ -284,12 +285,12 @@ public class CommandController {
     }
 
     @FXML
-    private void installJar() {
+    public void installJar() {
         GenerateController.showAndGenerate(GenerateController.INSTALL);
     }
 
     @FXML
-    private void deployJar() {
+    public void deployJar() {
         GenerateController.showAndGenerate(GenerateController.DEPLOY);
     }
 
@@ -309,17 +310,27 @@ public class CommandController {
     }
 
     @FXML
-    private void showCreateCommandUI() {
+    public void showCreateCommandUI() {
         AddCommandController.show(this, tabPanel.getSelectionModel().getSelectedIndex() == 0 ? CommandType.command : CommandType.item);
     }
 
     @FXML
-    private void showCreateFieldUI() {
+    public void showShortcutUI() {
+        ShortcutController.show();
+    }
+
+    @FXML
+    public void showCreateFieldUI() {
         if (selectMsg == null) {
             ConfirmController.show("请先选择一个指令进行编辑");
             return;
         }
         AddFieldController.show(this);
+    }
+
+    public void selectSearchText() {
+        searchField.requestFocus();
+        searchField.selectAll();
     }
 
     @FXML

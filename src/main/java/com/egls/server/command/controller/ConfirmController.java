@@ -1,10 +1,12 @@
 package com.egls.server.command.controller;
 
 import com.egls.server.command.MainApplication;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -34,17 +36,12 @@ public class ConfirmController {
 
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-//            stage.initStyle(StageStyle.UNDECORATED);
             stage.initOwner(MainApplication.getPrimaryStage());
             stage.setScene(new Scene(loader.load()));
-
+            stage.show();
 
             ConfirmController confirmController = loader.getController();
-            confirmController.stage = stage;
-            confirmController.msgLabel.setText(msg);
-            confirmController.runnable = runnable;
-
-            stage.show();
+            confirmController.init(stage, msg, runnable);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,6 +49,19 @@ public class ConfirmController {
 
     @FXML
     private void initialize() {
+    }
+
+    private void init(Stage stage, String msg, Runnable runnable) {
+        this.stage = stage;
+        this.runnable = runnable;
+        this.msgLabel.setText(msg);
+        this.stage.getScene().setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                cancel();
+            } else if (event.getCode() == KeyCode.ENTER) {
+                confirm();
+            }
+        });
     }
 
     @FXML

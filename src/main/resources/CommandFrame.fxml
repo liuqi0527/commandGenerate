@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0"
-            prefWidth="1293.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1293.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.egls.server.command.controller.CommandController">
     <top>
         <HBox prefHeight="34.0" prefWidth="1044.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -24,6 +24,7 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
+                                <MenuItem mnemonicParsing="false" onAction="#showShortcutUI" text="快捷键"/>
                                 <MenuItem mnemonicParsing="false" onAction="#showHelpUI" text="   ">
                                     <graphic>
                                         <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="10.0" pickOnBounds="true"
@@ -69,68 +70,71 @@
 
     <center>
         <HBox prefHeight="100.0" prefWidth="200.0">
+            <children>
 
-            <TabPane fx:id="tabPanel" layoutX="46.0" layoutY="44.0" prefHeight="618.0" prefWidth="580.0"
-                     tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS">
-                <tabs>
-                    <Tab text="指令">
-                        <content>
-                            <TableView fx:id="messageTable" editable="true" prefHeight="617.0" prefWidth="592.0"
-                                       style="-fx-border-color: #C8C8C8;">
-                                <columns>
-                                    <TableColumn fx:id="messageIdColumn" maxWidth="100.0" minWidth="100.0"
-                                                 prefWidth="100.0" text="Command"/>
-                                    <TableColumn fx:id="uiTypeColumn" maxWidth="38.0" minWidth="38.0" prefWidth="38.0"
-                                                 text="UI"/>
-                                    <TableColumn fx:id="messageNameColumn" prefWidth="198.0" text="ClassName"/>
-                                    <TableColumn fx:id="messageDesColumn" prefWidth="219.0" text="Comment"/>
-                                    <TableColumn fx:id="messageEditColumn" editable="false" maxWidth="40.0"
-                                                 minWidth="40.0" prefWidth="40.0" sortable="false" text="Edit"/>
-                                </columns>
-                                <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                                </columnResizePolicy>
-                            </TableView>
-                        </content>
-                    </Tab>
-                    <Tab text="结构体">
-                        <content>
-                            <TableView fx:id="itemTable" editable="true" prefHeight="617.0" prefWidth="592.0">
-                                <columns>
-                                    <TableColumn fx:id="itemNameColumn" prefWidth="167.0" text="ClassName"/>
-                                    <TableColumn fx:id="itemDesColumn" prefWidth="306.0000305175781" text="Comment"/>
-                                    <TableColumn fx:id="itemEditColumn" editable="false" prefWidth="89.0"
-                                                 sortable="false" text="Edit"/>
-                                </columns>
-                            </TableView>
-                        </content>
-                    </Tab>
-                </tabs>
-                <BorderPane.margin>
-                    <Insets left="20.0" top="20.0"/>
-                </BorderPane.margin>
-                <HBox.margin>
-                    <Insets bottom="10.0" left="20.0" top="10.0"/>
-                </HBox.margin>
-            </TabPane>
+                <TabPane fx:id="tabPanel" layoutX="46.0" layoutY="44.0" prefHeight="618.0" prefWidth="580.0"
+                         tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS">
+                    <tabs>
+                        <Tab text="指令">
+                            <content>
+                                <TableView fx:id="messageTable" editable="true" prefHeight="617.0" prefWidth="592.0"
+                                           style="-fx-border-color: #C8C8C8;">
+                                    <columns>
+                                        <TableColumn fx:id="messageIdColumn" maxWidth="100.0" minWidth="100.0"
+                                                     prefWidth="100.0" text="Command"/>
+                                        <TableColumn fx:id="uiTypeColumn" maxWidth="38.0" minWidth="38.0"
+                                                     prefWidth="38.0" text="UI"/>
+                                        <TableColumn fx:id="messageNameColumn" prefWidth="198.0" text="ClassName"/>
+                                        <TableColumn fx:id="messageDesColumn" prefWidth="219.0" text="Comment"/>
+                                        <TableColumn fx:id="messageEditColumn" editable="false" maxWidth="40.0"
+                                                     minWidth="40.0" prefWidth="40.0" sortable="false" text="Edit"/>
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                </TableView>
+                            </content>
+                        </Tab>
+                        <Tab text="结构体">
+                            <content>
+                                <TableView fx:id="itemTable" editable="true" prefHeight="617.0" prefWidth="592.0">
+                                    <columns>
+                                        <TableColumn fx:id="itemNameColumn" prefWidth="167.0" text="ClassName"/>
+                                        <TableColumn fx:id="itemDesColumn" prefWidth="306.0000305175781"
+                                                     text="Comment"/>
+                                        <TableColumn fx:id="itemEditColumn" editable="false" prefWidth="89.0"
+                                                     sortable="false" text="Edit"/>
+                                    </columns>
+                                </TableView>
+                            </content>
+                        </Tab>
+                    </tabs>
+                    <BorderPane.margin>
+                        <Insets left="20.0" top="20.0"/>
+                    </BorderPane.margin>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="20.0" top="10.0"/>
+                    </HBox.margin>
+                </TabPane>
 
-            <TableView fx:id="detailTable" editable="true" prefHeight="618.0" prefWidth="687.0" HBox.hgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="detailTypeColumn" maxWidth="250.0" minWidth="250.0" prefWidth="250.0"
-                                 text="Type"/>
-                    <TableColumn fx:id="detailNameColumn" prefWidth="132.0" text="Name"/>
-                    <TableColumn fx:id="detailDesColumn" prefWidth="221.0" text="Comment"/>
-                    <TableColumn fx:id="detailEditColumn" editable="false" maxWidth="120.0" minWidth="120.0"
-                                 prefWidth="120.0" sortable="false" text="Edit"/>
-                </columns>
-                <HBox.margin>
-                    <Insets bottom="10.0" left="20.0" right="20.0" top="38.0"/>
-                </HBox.margin>
-                <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                </columnResizePolicy>
-            </TableView>
+                <TableView fx:id="detailTable" editable="true" prefHeight="618.0" prefWidth="687.0" HBox.hgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="detailTypeColumn" maxWidth="250.0" minWidth="250.0" prefWidth="250.0"
+                                     text="Type"/>
+                        <TableColumn fx:id="detailNameColumn" prefWidth="132.0" text="Name"/>
+                        <TableColumn fx:id="detailDesColumn" prefWidth="221.0" text="Comment"/>
+                        <TableColumn fx:id="detailEditColumn" editable="false" maxWidth="120.0" minWidth="120.0"
+                                     prefWidth="120.0" sortable="false" text="Edit"/>
+                    </columns>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="38.0"/>
+                    </HBox.margin>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </children>
         </HBox>
     </center>
     <right>
@@ -142,69 +146,73 @@
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
             <center>
                 <HBox prefHeight="100.0" prefWidth="200.0">
-                    <GridPane layoutX="111.0" layoutY="7.0" prefHeight="125.0" prefWidth="479.0" HBox.hgrow="ALWAYS">
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="68.0"/>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="285.0"/>
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        </rowConstraints>
-                        <children>
-                            <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="135.0"
-                                   text="GroupId：">
-                                <font>
-                                    <Font size="15.0"/>
-                                </font>
-                            </Label>
-                            <Label alignment="TOP_RIGHT" prefHeight="19.0" prefWidth="135.0" text="artifactId："
-                                   GridPane.rowIndex="1">
-                                <font>
-                                    <Font size="15.0"/>
-                                </font>
-                            </Label>
-                            <Label alignment="TOP_RIGHT" prefHeight="14.0" prefWidth="135.0" text="version："
-                                   GridPane.rowIndex="2">
-                                <font>
-                                    <Font size="15.0"/>
-                                </font>
-                            </Label>
-                            <TextField fx:id="groupField" GridPane.columnIndex="1"/>
-                            <TextField fx:id="artifactField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                            <TextField fx:id="versionField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        </children>
-                    </GridPane>
-                    <Pane prefHeight="125.0" prefWidth="515.0" HBox.hgrow="ALWAYS">
-                        <children>
-                            <GridPane layoutX="105.0" layoutY="7.0" prefHeight="41.0" prefWidth="440.0">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0"
-                                                       prefWidth="68.0"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0"
-                                                       prefWidth="285.0"/>
-                                </columnConstraints>
-                                <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                </rowConstraints>
-                                <children>
-                                    <Label alignment="TOP_RIGHT" prefHeight="14.0" prefWidth="135.0" text="PackageName："
-                                           GridPane.rowIndex="0">
-                                        <font>
-                                            <Font size="15.0"/>
-                                        </font>
-                                    </Label>
-                                    <TextField fx:id="packageField" prefWidth="285.0" GridPane.columnIndex="1"
-                                               GridPane.rowIndex="0"/>
-                                </children>
-                            </GridPane>
-                            <Button id="genBtn" layoutX="183.0" layoutY="63.0" mnemonicParsing="false"
-                                    onAction="#installJar" text="Install Jar"/>
-                            <Button id="genBtn" layoutX="364.0" layoutY="63.0" mnemonicParsing="false"
-                                    onAction="#deployJar" text="Deploy Jar"/>
-                        </children>
-                    </Pane>
+                    <children>
+                        <GridPane layoutX="111.0" layoutY="7.0" prefHeight="125.0" prefWidth="479.0"
+                                  HBox.hgrow="ALWAYS">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="68.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0"
+                                                   prefWidth="285.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                            <children>
+                                <Label alignment="CENTER_RIGHT" contentDisplay="TOP" prefHeight="20.0" prefWidth="135.0"
+                                       text="GroupId：">
+                                    <font>
+                                        <Font size="15.0"/>
+                                    </font>
+                                </Label>
+                                <Label alignment="TOP_RIGHT" prefHeight="19.0" prefWidth="135.0" text="artifactId："
+                                       GridPane.rowIndex="1">
+                                    <font>
+                                        <Font size="15.0"/>
+                                    </font>
+                                </Label>
+                                <Label alignment="TOP_RIGHT" prefHeight="14.0" prefWidth="135.0" text="version："
+                                       GridPane.rowIndex="2">
+                                    <font>
+                                        <Font size="15.0"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="groupField" GridPane.columnIndex="1"/>
+                                <TextField fx:id="artifactField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                <TextField fx:id="versionField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                            </children>
+                        </GridPane>
+                        <Pane prefHeight="125.0" prefWidth="515.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <GridPane layoutX="105.0" layoutY="7.0" prefHeight="41.0" prefWidth="440.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0"
+                                                           prefWidth="68.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0"
+                                                           prefWidth="285.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label alignment="TOP_RIGHT" prefHeight="14.0" prefWidth="135.0"
+                                               text="PackageName：" GridPane.rowIndex="0">
+                                            <font>
+                                                <Font size="15.0"/>
+                                            </font>
+                                        </Label>
+                                        <TextField fx:id="packageField" prefWidth="285.0" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="0"/>
+                                    </children>
+                                </GridPane>
+                                <Button id="genBtn" layoutX="183.0" layoutY="63.0" mnemonicParsing="false"
+                                        onAction="#installJar" text="Install Jar"/>
+                                <Button id="genBtn" layoutX="364.0" layoutY="63.0" mnemonicParsing="false"
+                                        onAction="#deployJar" text="Deploy Jar"/>
+                            </children>
+                        </Pane>
+                    </children>
                     <BorderPane.margin>
                         <Insets left="80.0" right="80.0"/>
                     </BorderPane.margin>

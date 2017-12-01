@@ -1,11 +1,14 @@
 package com.egls.server.command.controller;
 
+import java.util.stream.Collectors;
+
 import com.egls.server.command.CommandManager;
 import com.egls.server.command.MainApplication;
 import com.egls.server.command.model.CommandFieldEntity;
 import com.egls.server.command.model.CommandObjectEntity;
 import com.egls.server.command.model.type.CollectionType;
 import com.egls.server.command.model.type.FieldType;
+
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -14,12 +17,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.stream.Collectors;
 
 /**
  * @author LiuQi
@@ -74,13 +76,10 @@ public class AddFieldController {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(MainApplication.getPrimaryStage());
             stage.setScene(new Scene(loader.load()));
+            stage.show();
 
             AddFieldController controller = loader.getController();
-            controller.stage = stage;
-            controller.messageViewController = messageViewController;
-            controller.updateByCommand();
-
-            stage.show();
+            controller.init(stage, messageViewController);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,11 +103,23 @@ public class AddFieldController {
         updateValueBox();
     }
 
-    private void updateByCommand() {
+    private void init(Stage stage, CommandController commandController) {
+        this.stage = stage;
+        this.messageViewController = commandController;
+
         CommandObjectEntity message = messageViewController.getSelectMsg();
         boolean isUICommand = message != null && message.isUiCommand();
         collectionBox.setDisable(isUICommand);
         switchBtn.setDisable(isUICommand);
+        nameField.requestFocus();
+
+        stage.getScene().setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                stage.close();
+            } else if (event.getCode() == KeyCode.ENTER) {
+                create();
+            }
+        });
     }
 
     private void initBox(ChoiceBox<String> box, int type) {
@@ -147,8 +158,9 @@ public class AddFieldController {
         }
 
         if (isMapType ? addMapField() : addSimpleField()) {
-            nameField.setText(null);
             desField.setText(null);
+            nameField.setText(null);
+            nameField.requestFocus();
         }
     }
 

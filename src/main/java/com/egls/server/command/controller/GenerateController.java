@@ -1,29 +1,31 @@
 package com.egls.server.command.controller;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+
 import com.egls.server.command.CommandManager;
 import com.egls.server.command.MainApplication;
 import com.egls.server.command.model.CommandObjectEntity;
 import com.egls.server.utils.file.FileType;
 import com.egls.server.utils.file.FileUtil;
 import com.egls.server.utils.file.TxtUtil;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 
 /**
  * @author LiuQi
@@ -55,12 +57,11 @@ public class GenerateController {
             stage.initStyle(StageStyle.UNDECORATED);
             stage.initOwner(MainApplication.getPrimaryStage());
             stage.setScene(new Scene(loader.load()));
+            stage.show();
 
             GenerateController generateController = loader.getController();
-            generateController.stage = stage;
-            generateController.buildCmd = buildCmd;
+            generateController.init(stage, buildCmd);
             generateController.generate();
-            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,6 +76,16 @@ public class GenerateController {
     @FXML
     private void close() {
         stage.close();
+    }
+
+    private void init(Stage stage, String buildCmd) {
+        this.stage = stage;
+        this.buildCmd = buildCmd;
+        stage.getScene().setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ESCAPE && closeBtn.isVisible()) {
+                close();
+            }
+        });
     }
 
     private void generate() {

@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -57,22 +58,34 @@ public class AddCommandController {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(MainApplication.getPrimaryStage());
             stage.setScene(new Scene(loader.load()));
+            stage.show();
 
             AddCommandController newMessageFrame = loader.getController();
-            newMessageFrame.messageViewController = messageViewController;
-            newMessageFrame.type = type;
-            newMessageFrame.stage = stage;
-            newMessageFrame.commandPanel.setVisible(type.isCommand());
-
-            if (messageViewController.getSelectMsg() != null) {
-                int defaultCommandId = messageViewController.getSelectMsg().getIntId() + 1;
-                String defaultCommand = "0x" + StringUtils.upperCase(StringUtils.leftPad(Integer.toHexString(defaultCommandId), 4, '0'));
-                newMessageFrame.idField.setText(defaultCommand);
-                newMessageFrame.nameField.requestFocus();
-            }
-            stage.show();
+            newMessageFrame.init(stage, type, messageViewController);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void init(Stage stage, CommandType commandType, CommandController messageViewController) {
+        this.stage = stage;
+        this.type = commandType;
+        this.messageViewController = messageViewController;
+        this.commandPanel.setVisible(type.isCommand());
+        this.stage.getScene().setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                stage.close();
+            } else if (event.getCode() == KeyCode.ENTER) {
+                create();
+            }
+        });
+
+
+        if (messageViewController.getSelectMsg() != null) {
+            int defaultCommandId = messageViewController.getSelectMsg().getIntId() + 1;
+            String defaultCommand = "0x" + StringUtils.upperCase(StringUtils.leftPad(Integer.toHexString(defaultCommandId), 4, '0'));
+            idField.setText(defaultCommand);
+            nameField.requestFocus();
         }
     }
 

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="335.0"
+            prefWidth="434.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.egls.server.command.controller.ShortcutController">
+    <children>
+        <Button layoutX="197.0" layoutY="292.0" mnemonicParsing="false" onAction="#save" text="保存"/>
+        <Label alignment="CENTER_RIGHT" layoutX="2.0" layoutY="53.0" prefHeight="23.0" prefWidth="72.0" text="指令">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <Label alignment="CENTER_RIGHT" layoutX="1.0" layoutY="100.0" prefHeight="23.0" prefWidth="72.0" text="属性">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="commandFunctionText" editable="false" layoutX="89.0" layoutY="46.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <TextField fx:id="commandCodeText" editable="false" layoutX="260.0" layoutY="46.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <Label alignment="CENTER" layoutX="227.0" layoutY="53.0" prefHeight="23.0" prefWidth="33.0" text="+">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="fieldFunctionText" editable="false" layoutX="88.0" layoutY="93.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <TextField fx:id="fieldCodeText" editable="false" layoutX="259.0" layoutY="93.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <Label alignment="CENTER" layoutX="226.0" layoutY="100.0" prefHeight="23.0" prefWidth="33.0" text="+">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <Label alignment="CENTER" layoutX="225.0" layoutY="198.0" prefHeight="23.0" prefWidth="33.0" text="+">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <Label alignment="CENTER_RIGHT" layoutY="198.0" prefHeight="23.0" prefWidth="72.0" text="Install">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="installFunctionText" editable="false" layoutX="87.0" layoutY="191.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <TextField fx:id="installCodeText" editable="false" layoutX="258.0" layoutY="191.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <Label alignment="CENTER_RIGHT" layoutY="246.0" prefHeight="23.0" prefWidth="72.0" text="Deploy">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="deployCodeText" editable="false" layoutX="258.0" layoutY="239.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <Label alignment="CENTER" layoutX="225.0" layoutY="246.0" prefHeight="23.0" prefWidth="33.0" text="+">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="deployFunctionText" editable="false" layoutX="87.0" layoutY="239.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <Label alignment="CENTER" layoutX="27.0" layoutY="14.0" prefHeight="23.0" prefWidth="369.0"
+               text="选中对应行，使用一次想要的快捷键">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="searchFunctionText" editable="false" layoutX="87.0" layoutY="142.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <TextField fx:id="searchCodeText" editable="false" layoutX="258.0" layoutY="142.0" prefHeight="37.0"
+                   prefWidth="138.0"/>
+        <Label alignment="CENTER" layoutX="225.0" layoutY="149.0" prefHeight="23.0" prefWidth="33.0" text="+">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <Label alignment="CENTER_RIGHT" layoutY="149.0" prefHeight="23.0" prefWidth="72.0" text="搜索">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
