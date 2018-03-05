@@ -62,18 +62,27 @@ public class CommandManager implements ResourceKindMonitor {
         }
 
         try {
-            LocalProperties.setConfigPath(file.getAbsolutePath());
+            loadFile(file);
+            recordMd5(file);
+            ResourceWatcher.registerFile(file, instance);
+        } catch (Exception e) {
+            System.err.println("read config fail");
+        }
+        return true;
+    }
+
+    public static boolean loadFile(File file) {
+        try {
             CommandManager.instance = new CommandManager();
 
             JAXBContext jaxbContext = JAXBContext.newInstance(CommandManager.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             CommandManager.instance = (CommandManager) jaxbUnmarshaller.unmarshal(file);
-            ResourceWatcher.registerFile(file, instance);
-            recordMd5(file);
+            return true;
         } catch (Exception e) {
             System.err.println("read config fail");
+            return false;
         }
-        return true;
     }
 
     @Override

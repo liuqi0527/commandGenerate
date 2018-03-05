@@ -92,6 +92,7 @@ public class MainApplication extends Application {
 
     public static void loadAndShow(File file) {
         if (CommandManager.load(file)) {
+            LocalProperties.setConfigPath(file.getAbsolutePath());
             showMainUI();
         }
     }

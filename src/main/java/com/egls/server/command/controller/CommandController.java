@@ -90,6 +90,15 @@ public class CommandController {
     @FXML
     private TabPane tabPanel;
 
+    @FXML
+    private Label viewCmd;
+
+    @FXML
+    private Label viewName;
+
+    @FXML
+    private Label viewComment;
+
     private CommandObjectEntity selectMsg;
 
     @FXML
@@ -243,6 +252,10 @@ public class CommandController {
     private void messageSelect(ObservableValue<?> observable, CommandObjectEntity oldValue, CommandObjectEntity newValue) {
         selectMsg = newValue;
         detailTable.setItems(newValue != null ? newValue.getFields() : null);
+
+        viewCmd.setText(selectMsg == null ? "" : selectMsg.getId());
+        viewName.setText(selectMsg == null ? "" : selectMsg.getName());
+        viewComment.setText(selectMsg == null ? "" : selectMsg.getComment());
     }
 
     public CommandObjectEntity getSelectMsg() {
