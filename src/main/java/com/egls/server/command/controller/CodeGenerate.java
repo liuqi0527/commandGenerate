@@ -8,10 +8,7 @@ import java.nio.charset.Charset;
 import java.util.function.Consumer;
 
 import com.egls.server.command.CommandManager;
-import com.egls.server.command.model.CommandObjectEntity;
-import com.egls.server.utils.file.FileType;
 import com.egls.server.utils.file.FileUtil;
-import com.egls.server.utils.file.TxtUtil;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,7 +44,8 @@ public class CodeGenerate extends Thread {
             generalPomFile(projectPath);
 
             printMessage("生成Java源文件文件\n");
-            generalJavaFile(commandPath);
+            JavaFileGenerate javaFileGenerate = new JavaFileGenerate(commandPath);
+            javaFileGenerate.generate();
 
             printMessage("开始编译打包\n");
             Process process;
@@ -94,26 +92,6 @@ public class CodeGenerate extends Thread {
         }
     }
 
-    private boolean printStream(InputStream stream) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        while (stream.available() > 0) {
-            sb.append((char) stream.read());
-        }
-
-        if (sb.length() > 0) {
-            printMessage(sb.toString());
-        }
-        return sb.length() > 0;
-    }
-
-
-    private void printMessage(String message) {
-        if (StringUtils.isNotBlank(message) && messageConsumer != null) {
-            messageConsumer.accept(message);
-        }
-    }
-
-
     private void generalPomFile(String projectPath) throws Exception {
         Charset charset = Charset.forName("utf-8");
 
@@ -139,14 +117,22 @@ public class CodeGenerate extends Thread {
         FileUtils.writeStringToFile(new File(projectPath + File.separator + "assembly.xml"), assemblyFile.toString(), charset);
     }
 
-    private void generalJavaFile(String commandPath) throws Exception {
-        for (CommandObjectEntity commandObjectEntity : CommandManager.getInstance().commandList) {
-            String javaFilePath = commandPath + File.separator + commandObjectEntity.getName() + FileType.java.getExtension();
-            TxtUtil.write(commandObjectEntity.toJavaCode(), javaFilePath, false, false);
+    private boolean printStream(InputStream stream) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        while (stream.available() > 0) {
+            sb.append((char) stream.read());
         }
-        for (CommandObjectEntity commandObjectEntity : CommandManager.getInstance().itemList) {
-            String javaFilePath = commandPath + File.separator + commandObjectEntity.getName() + FileType.java.getExtension();
-            TxtUtil.write(commandObjectEntity.toJavaCode(), javaFilePath, false, false);
+
+        if (sb.length() > 0) {
+            printMessage(sb.toString());
+        }
+        return sb.length() > 0;
+    }
+
+
+    private void printMessage(String message) {
+        if (StringUtils.isNotBlank(message) && messageConsumer != null) {
+            messageConsumer.accept(message);
         }
     }
 

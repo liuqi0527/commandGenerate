@@ -1,5 +1,6 @@
 package com.egls.server.command.controller;
 
+import com.egls.server.command.CommandManager;
 import com.egls.server.command.MainApplication;
 
 import javafx.application.Platform;
@@ -34,6 +35,11 @@ public class GenerateController {
 
     public static void showAndGenerate(String buildCmd) {
         try {
+
+            if (!CommandManager.errorCheck()) {
+                return;
+            }
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(AddCommandController.class.getResource("/GenerateConsole.fxml"));
 

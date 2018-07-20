@@ -30,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 public class CommandFieldEntity {
     private static final String SEPARATOR = ",";
 
-
     //集合类型
     private CollectionType collectionType = CollectionType.none;
 
@@ -125,6 +124,13 @@ public class CommandFieldEntity {
                 addFieldType(typeStr, false);
             }
         }
+    }
+
+    /**
+     * 模板使用的方法
+     */
+    public String getCapitalizeName() {
+        return StringUtils.capitalize(getName());
     }
 
     @XmlElement

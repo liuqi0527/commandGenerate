@@ -69,19 +69,11 @@ public class FieldType {
         return boxType;
     }
 
-    public String generateRead(String fieldName) {
-        return String.format("this.%s = netDataPacket.%s();\n", fieldName, read);
+    public String getRead() {
+        return read;
     }
 
-    public String generateCollectionRead() {
-        return String.format("packet.%s();", read);
-    }
-
-    public String generateWrite(String fieldName) {
-        return String.format("netDataPacket.%s(this.%s);\n", write, fieldName);
-    }
-
-    public String generateCollectionWrite(String fieldName) {
-        return String.format("packet.%s(%s)", write, fieldName);
+    public String getWrite() {
+        return write;
     }
 }

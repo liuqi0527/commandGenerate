@@ -1,6 +1,10 @@
 package com.egls.server.command;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -10,6 +14,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.egls.server.command.controller.ConfirmController;
 import com.egls.server.command.model.CommandObjectEntity;
 import com.egls.server.command.model.type.CommandType;
 import com.egls.server.utils.Md5Util;
@@ -65,6 +70,7 @@ public class CommandManager implements ResourceKindMonitor {
             loadFile(file);
             recordMd5(file);
             ResourceWatcher.registerFile(file, instance);
+            errorCheck();
         } catch (Exception e) {
             System.err.println("read config fail");
         }
@@ -123,6 +129,42 @@ public class CommandManager implements ResourceKindMonitor {
         }
     }
 
+    /**
+     * 重复指令检查
+     */
+    public static boolean errorCheck() {
+        Map<String, List<CommandObjectEntity>> nameMap = new HashMap<>();
+        Map<Integer, List<CommandObjectEntity>> idMap = new HashMap<>();
+        for (CommandObjectEntity entity : instance.commandList) {
+            nameMap.computeIfAbsent(entity.getName(), key -> new ArrayList<>()).add(entity);
+            idMap.computeIfAbsent(entity.getIntId(), key -> new ArrayList<>()).add(entity);
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        nameMap.values().stream()
+                .filter(list -> list.size() > 1)
+                .forEach(list -> {
+                    list.stream().findAny().ifPresent(entity -> stringBuilder.append(entity.getName()).append("："));
+                    list.forEach(entity -> stringBuilder.append(entity.getId()).append(", "));
+                    stringBuilder.append("\n");
+                });
+
+        idMap.values().stream()
+                .filter(list -> list.size() > 1)
+                .forEach(list -> {
+                    list.stream().findAny().ifPresent(entity -> stringBuilder.append(entity.getId()).append("："));
+                    list.forEach(entity -> stringBuilder.append(entity.getName()).append(", "));
+                    stringBuilder.append("\n");
+                });
+        if (stringBuilder.length() != 0) {
+            stringBuilder.append("\n");
+            stringBuilder.append("以上指令重复，请修改");
+            Platform.runLater(() -> ConfirmController.show(stringBuilder.toString()));
+            return false;
+        }
+        return true;
+    }
+
     public static String getPackageName() {
         return instance.packageName;
     }
@@ -157,6 +199,10 @@ public class CommandManager implements ResourceKindMonitor {
     public static void setVersion(String version) {
         instance.version = version;
         save();
+    }
+
+    public static boolean containsId(int id) {
+        return instance.commandList.stream().anyMatch(commandObjectEntity -> commandObjectEntity.getIntId() == id);
     }
 
     public static void addCommand(CommandObjectEntity command) {

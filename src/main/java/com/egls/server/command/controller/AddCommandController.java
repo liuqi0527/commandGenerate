@@ -83,6 +83,10 @@ public class AddCommandController {
 
         if (messageViewController.getSelectMsg() != null) {
             int defaultCommandId = messageViewController.getSelectMsg().getIntId() + 1;
+            while (CommandManager.containsId(defaultCommandId)) {
+                defaultCommandId += 1;
+            }
+
             String defaultCommand = "0x" + StringUtils.upperCase(StringUtils.leftPad(Integer.toHexString(defaultCommandId), 4, '0'));
             idField.setText(defaultCommand);
             nameField.requestFocus();
